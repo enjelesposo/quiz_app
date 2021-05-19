@@ -4,30 +4,55 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Quiz App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sawarabi+Gothic&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
     <script src="./app.js" defer></script>
+    <title>Quiz App</title>
 </head>
 <body>
+    
+    <div class="container">
 
+        <div id="start"> スタート！ </div>
+        
+        <div id="quiz" style="display: none;">
 
-    <!-- <div class="quiz-container">
-        <h1 id="question">誕生日</h1>
-        <ul class="answers">
-            <li class="answer-wrapper">
-                <button class=""answer" id="a">かわひぶく</button>
-            </li>
-            <li class="answer-wrapper">
-                <button class=""answer" id="b">かわひぶく</button>
-            </li>
-            <li class="answer-wrapper">
-                <button class=""answer" id="c">かわひぶく</button>
-            </li>
-            <li class="answer-wrapper">
-                <button class=""answer" id="d">かわひぶく</button>
-            </li>
-        </ul>
-    </div> -->
+            <!-- QUESTION -->
+            <div id="question">
+                <!-- <p>教科書</p> -->
+            </div>
+        
+            <!-- ANSWER CHOICES -->
+            <div id="choices">
+                <div class="choice" id="A" onclick="checkAnswer('A')"></div>
+                <div class="choice" id="B" onclick="checkAnswer('B')"></div>
+                <div class="choice" id="C" onclick="checkAnswer('C')"></div>
+                <div class="choice" id="D" onclick="checkAnswer('D')"></div>
+            </div>
+            
+            <!-- TIMER -->
+            <div id="timer">
+                <div class="counter"></div>
+                <div class="b-time-gauge">
+                    <div class="time-gauge"></div>
+                </div>
+            </div>
+
+            <!-- QUIZ PROGRESS -->
+            <div id="progress">
+                <!-- <div class="prog"></div> -->
+            </div>
+        </div>
+        
+        <!-- SCORE DISPLAY -->
+        <div id="score" style="display:none;">
+            <img class="score-img" src="./img/3.png" alt="ok-unicorn">
+            <p class="score-percent">50%</p>
+            <p class="score-message">大丈夫よ…</p>
+        </div>
+        
+    </div>
+
 
 </body>
 </html>

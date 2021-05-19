@@ -1,108 +1,173 @@
 const quizData = [
     {
         question: '影響',
-        a: 'えきまで',
-        b: 'えんぴつ',
-        c: 'えいきょう',
-        d: 'かげきょう',
-        correct: 'c'
+        choiceA: 'えきまで',
+        choiceB: 'えんぴつ',
+        choiceC: 'えいきょう',
+        choiceD: 'かげきょう',
+        correct: 'C'
     },{
         question: '交換',
-        a: 'こうかん',
-        b: 'こうりつ',
-        c: 'しゅうかん',
-        d: 'こうこう',
-        correct: 'a'
+        choiceA: 'こうかん',
+        choiceB: 'こうりつ',
+        choiceC: 'しゅうかん',
+        choiceD: 'こうこう',
+        correct: 'A'
     },{
         question: '上げる',
-        a: 'あげる',
-        b: 'さげる',
-        c: '怖げる',
-        d: 'ささげる',
-        correct: 'a'
+        choiceA: 'あげる',
+        choiceB: 'さげる',
+        choiceC: 'こわげる',
+        choiceD: 'ささげる',
+        correct: 'A'
     },{
         question: '必要',
-        a: 'かならず',
-        b: 'ひつよう',
-        c: 'するべき',
-        d: 'ないよう',
-        correct: 'b'
+        choiceA: 'かならず',
+        choiceB: 'ひつよう',
+        choiceC: 'するべき',
+        choiceD: 'ないよう',
+        correct: 'B'
     },{
         question: '考える',
-        a: 'こえる',
-        b: 'かえる',
-        c: 'つたえる',
-        d: 'かんがえる',
-        correct: 'd'
+        choiceA: 'こえる',
+        choiceB: 'かえる',
+        choiceC: 'つたえる',
+        choiceD: 'かんがえる',
+        correct: 'D'
     }
 
 ];
 
-var quizesNum = 0;
+// get elements
+const start = document.getElementById('start');
+const quiz = document.getElementById('quiz');
+const question = document.getElementById('question');
+const progress = document.getElementById('progress');
+const choiceA = document.getElementById('A');
+const choiceB = document.getElementById('B');
+const choiceC = document.getElementById('C');
+const choiceD = document.getElementById('D');
+const scoreDisplay = document.getElementById('score');
+const counter = document.querySelector('.counter');
+const timeGauge = document.querySelector('.time-gauge');
 
-const quiz = (quizes) => {
+// create var
+const lastQuestion = quizData.length - 1;
+let currentQuestion = 0;
+let TIMER;
+let score = 0;
 
-    // create html for the quiz
+// add an eventlistener (click) to start the quiz onclick
+start.addEventListener('click', function(){
+    startQuiz();
+});
 
-    // create DIV quiz-container
-    const quizContainer = document.createElement('div');
-    quizContainer.classList.add('quiz-container');
 
-    // create h1
-    const questionH1 = document.createElement('h1');
-    questionH1.textContent = quizData[quizes].question;      // textContent question
-    questionH1.setAttribute('id', 'question');
-    // append to div
-    quizContainer.appendChild(questionH1);
+function startQuiz(){
+    start.style.display = 'none';
+    quiz.style.display = 'block';
+    renderQuestion();
+    renderProgress();
+    renderTimer();
+    TIMER = setInterval(renderTimer, 1000);
+};
 
-    // create ul
-    const answersUl = document.createElement('ul');
-    answersUl.classList.add('answers');
-    quizContainer.appendChild(answersUl);
-    
-    // create lis and buttons
-    for (let i = 0; i < 4; i++){
-        let choices = [quizData[quizes].a, quizData[quizes].b, quizData[quizes].c, quizData[quizes].d];
-        let choicesKey = ['a', 'b', 'c', 'd'];
+// render the quiz's question and choices
+const renderQuestion = () => {
+    let q = quizData[currentQuestion];
+    question.innerHTML = `<p>${q.question}</p>`;
+    choiceA.innerText = `${q.choiceA}`;
+    choiceB.innerText = `${q.choiceB}`;
+    choiceC.innerText = `${q.choiceC}`;
+    choiceD.innerText = `${q.choiceD}`;
+};
 
-        // create li
-        const answerLi = document.createElement('li');
-        answerLi.classList.add('answer-wrapper');
-        // create button
-        const answerButton = document.createElement('button');
-        answerButton.classList.add('answer');
-        answerButton.setAttribute('id', choicesKey[i]);
-        answerButton.textContent = choices[i];
-        // append button to li then append li to ul
-        answerLi.appendChild(answerButton);
-        answersUl.appendChild(answerLi);    
-
+// render the progress bar
+const renderProgress = () => {
+    for(let qIndex = 0; qIndex <= lastQuestion; qIndex++){
+        progress.innerHTML += `<div class="prog" id = '${qIndex}'></div>`
     }
-
-    document.body.appendChild(quizContainer); 
-    const buttons = document.querySelectorAll('.answer');
-    buttons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            let choice = e.target.getAttribute('id');
-            console.log(choice);
-            if(choice === quizData[quizes].correct){
-                alert('Correct!');
-                score++;
-                quizesNum;
-                quizContainer.remove();
-                quiz(quizesNum);
-                return;
-            } else {
-                alert('wrong');
-                return;
-            }
-        })
-    })
 }
 
-var score = 0;
+// render the timer
+let count = 0;
+const questionTime = 10; // 10s
+const gaugeWidth = 80; // 80px
+const gaugeUnit = 80 / 10;
 
-quiz(quizesNum);
+const renderTimer = () => {
+    if(count <= questionTime){
+        counter.innerText = count;
+        timeGauge.style.width = count * gaugeUnit + 'px';
+        count++;
+    } else {
+        count = 0;
+        answerIsWrong();
+        if(currentQuestion < lastQuestion){
+            // render the next question
+            currentQuestion++;
+            renderQuestion();
+        } else {
+            // end the quiz
+            clearInterval(TIMER);
+            scoreRender();
+        }
+    }
+};
 
+// check answer
 
+const checkAnswer = (answer) => {
+    let q = quizData[currentQuestion];
+    if(answer === q.correct){   // answer correct
+        score++;
+        count = 0;
+        answerIsCorrect();
+    } else {
+        count = 0;
+        answerIsWrong();
+    }
+    if(currentQuestion < lastQuestion){
+        // render next question
+        currentQuestion++;
+        renderQuestion();
+    } else {
+            // end the quiz
+            clearInterval(TIMER);
+            scoreRender();
+        };
+};
 
+const answerIsCorrect = () => {
+    document.getElementById(currentQuestion).style.backgroundColor = '#9bdd54';
+};
+
+const answerIsWrong = () => {
+    document.getElementById(currentQuestion).style.backgroundColor = '#dd5555';
+}
+
+let scorePerCentDisplay = document.querySelector('.score-percent');
+let scoreImg = document.querySelector('.score-img');
+let scoreMessage = document.querySelector('.score-message');
+
+const scoreRender = () => {
+    quiz.style.display = 'none';
+    scoreDisplay.style.display = 'block';
+    const scorePerCent = Math.round(100 * score / quizData.length);
+    scorePerCentDisplay.innerText = scorePerCent + '%';
+
+    let img = (scorePerCent >= 90) ? './img/1.png':
+              (scorePerCent >= 60) ? './img/2.png': 
+              (scorePerCent >= 40) ? './img/3.png':
+              (scorePerCent >= 20) ? './img/4.png':
+              './img/5.png';
+
+    let message = (scorePerCent >= 90) ? 'すごい！日本語の天才だ！':
+              (scorePerCent >= 60) ? '日本語がお上手ですね。': 
+              (scorePerCent >= 40) ? '大丈夫よ…':
+              (scorePerCent >= 20) ? '残念ですね。':
+              'どうしたんですか。';
+
+    scoreImg.src = img;
+    scoreMessage.innerText = message;
+};
